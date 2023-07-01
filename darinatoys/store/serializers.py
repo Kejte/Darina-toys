@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Toy, Avatar, Cart
+from .models import Toy, Avatar, Cart, Category
 
 class PhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
@@ -17,3 +17,4 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ('items', )
+

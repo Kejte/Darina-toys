@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('toylist/', ToyAPIList.as_view()),
-    path('toy/<str:slug>/', RetrieveToyAPI.as_view()),
+    path('toy/<str:slug>/', ToyViewSet.as_view({'get': 'get', 'put': 'add_to_cart'})),
     path('category/<str:slug>/', ListToysByCategory.as_view()),
 
 ]

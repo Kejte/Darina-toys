@@ -1,4 +1,5 @@
 from django.db import models
+from darinatoys.settings import MEDIA_URL
 
 def upload_to_toys(instance, filename):
     return f"toys/{instance.toy.category.slug}/{instance.toy.slug}/{filename}"
@@ -38,6 +39,7 @@ class Avatar(models.Model):
 
     def __str__(self) -> str:
         return f"Аватар для {self.toy}"
+
 
     class Meta:
         verbose_name = 'Аватар'
