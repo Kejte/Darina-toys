@@ -1,0 +1,15 @@
+#module migrations
+/*/migrations/*
+!/*/migrations/__init__.py
+
+#cached files
+__pycache__
+
+#works files
+*.sqlite3
+.env
+
+#all static
+/static
+/media
+/venv
