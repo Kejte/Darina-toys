@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Toy, Avatar, Cart, Category
+from .models import Toy, Avatar, Cart, CartItem, Transaction
 
 class PhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
@@ -13,8 +13,22 @@ class ToySerializer(serializers.ModelSerializer):
         model = Toy
         fields = ('title', 'description', 'cost', 'photos', 'category', 'slug')
 
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ('amount', 'toy')
+
+class TransactionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Transaction
+        depth = 1
+        fields = ('items','status')
+
 class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True)
+
     class Meta:
         model = Cart
-        fields = ('items', )
+        fields = ('items', 'user')
 

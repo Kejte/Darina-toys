@@ -50,12 +50,13 @@ class CartItem(models.Model):
     amount = models.IntegerField(verbose_name='Количество', null=False, default=1)
 
 class Cart(models.Model):
-    items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart')
+    items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart', blank=True)
     user = models.OneToOneField('auth.User', verbose_name='Владелец корзины', null=False, on_delete=models.CASCADE)
     
     def __str__(self) -> str:
         return f'Корзина пользователя {self.user.username}'
     
+
     class Meta:
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'

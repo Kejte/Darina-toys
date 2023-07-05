@@ -20,6 +20,9 @@ class AdminCategory(admin.ModelAdmin):
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
 
+@admin.register(Cart)
+class AdminCart(admin.ModelAdmin):
+    list_display = ('user',)
 
 @admin.register(Transaction)
 class AdminTransaction(admin.ModelAdmin):

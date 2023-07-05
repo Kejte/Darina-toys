@@ -19,13 +19,18 @@ from django.urls import path
 from store.views import *
 from .settings import MEDIA_ROOT, DEBUG
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('toylist/', ToyAPIList.as_view()),
-    path('toy/<str:slug>/', ToyViewSet.as_view({'get': 'get', 'put': 'add_to_cart'})),
+    path('toy/<str:slug>/', RetrieveToyAPI.as_view()),
     path('category/<str:slug>/', ListToysByCategory.as_view()),
-
+    path('cart/', CartAPIView.as_view()),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('cart/purchase/', TransactionAPIView.as_view())
 ]
 
 if DEBUG:
