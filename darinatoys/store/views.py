@@ -18,6 +18,18 @@ class ToyAPIList(generics.ListAPIView):
     serializer_class = ToySerializer
     pagination_class = ToyAPIListPagination
 
+class FeedbackAPI(APIView):
+    def get(self, request: HttpRequest):
+        feedbacks = Feedback.objects.filter(user=request.user)
+        serializer = FeedbackSerializer(feedbacks, many=True)
+        return Response(data=serializer.data)
+
+    def put(self, request: HttpRequest):
+        serializer = FeedbackSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'responce': 'Спасибо за обратную связь!'})
+
 class RetrieveToyAPI(APIView):
     def get(self, request: HttpRequest, slug: str):
         toy = Toy.objects.get(slug=slug)
@@ -25,13 +37,17 @@ class RetrieveToyAPI(APIView):
         return Response(data=serializer.data)
     
     def put(self, request: HttpRequest, slug: str):
-        serializer = ReviewSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        review = serializer.save()
-        toy = Toy.objects.get(slug=slug)
-        toy.reviews.add(review)
-        toy.save()
-        return Response({'responce': 'Спасибо за отзыв!'})
+        transactions = Transaction.objects.filter(user=request.user, status='RD')
+        if len(transactions) > 0:
+            serializer = ReviewSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            review = serializer.save()
+            toy = Toy.objects.get(slug=slug)
+            toy.reviews.add(review)
+            toy.save()
+            return Response({'responce': 'Спасибо за отзыв!'})
+        else:
+            return Response({'responce': 'Вы не можете оставить отзыв так как не приобрели товар'})
         
 
 class TransactionAPIView(APIView):

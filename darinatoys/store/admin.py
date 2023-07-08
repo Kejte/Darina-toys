@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Toy, Category, Avatar, Transaction, Cart, Review
+from .models import Toy, Category, Avatar, Transaction, Cart, Review, Feedback
 
 class AvatarInline(admin.TabularInline):
     fk_name = 'toy'
@@ -36,6 +36,12 @@ class AdminTransaction(admin.ModelAdmin):
     search_fields = ('user',)
     readonly_fields = ('user', 'items')
     list_display = ('user', 'status')
+    list_filter = ('user', 'status')
+
+@admin.register(Feedback)
+class AdminFeedback(admin.ModelAdmin):
+    list_display = ('user', 'status')
+    readonly_fields = ('user', 'message', 'email')
     list_filter = ('user', 'status')
 
 

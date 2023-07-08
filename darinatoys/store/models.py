@@ -116,3 +116,21 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
+class Feedback(models.Model):
+    FEEDBACK_CHOICES=[
+   ("NW", "Новое"),
+   ("IN", "В обработке"),
+   ("RD", "Готово"),
+    ]
+    user = models.ForeignKey('auth.User', verbose_name='Владелец обращения',  null=False, on_delete=models.CASCADE)
+    email = models.CharField(verbose_name='Электронная почта', max_length=255, null=False)
+    message = models.CharField(verbose_name='Сообщение', max_length=2000, null=False)
+    status = models.CharField(max_length=2, choices=FEEDBACK_CHOICES, verbose_name='Статус обращения', null=False, default='NW')
+
+    def __str__(self) -> str:
+        return f'Обращения пользователя {self.user}'
+    
+    class Meta:
+        verbose_name = 'Обращение'
+        verbose_name_plural = 'Обращения'
