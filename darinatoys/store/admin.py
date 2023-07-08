@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Toy, Category, Avatar, CartItem, Transaction, Cart
+from .models import Toy, Category, Avatar, Transaction, Cart, Review
 
 class AvatarInline(admin.TabularInline):
     fk_name = 'toy'
@@ -7,12 +7,19 @@ class AvatarInline(admin.TabularInline):
     verbose_name = 'Фото игрушки'
     verbose_name_plural = 'Настройка слайдера'
 
+class ReviewInline(admin.TabularInline):
+    fk_name = 'toy'
+    model = Review
+    verbose_name = 'Отзыв о игрушке'
+    verbose_name_plural = 'Отзывы об игрушке'
+    readonly_fields = ('title', 'description', 'rating', 'toy', 'user')
+
 @admin.register(Toy)
 class AdminToy(admin.ModelAdmin):
     list_display = ('title', 'category', 'cost', 'is_published', )
     search_fields = ('title',)
     prepopulated_fields = {'slug': ('title',)}
-    inlines = [AvatarInline,]
+    inlines = [AvatarInline, ReviewInline]
     list_filter = ('category', 'is_published')
 
 @admin.register(Category)

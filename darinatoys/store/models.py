@@ -24,10 +24,19 @@ class Toy(models.Model):
     is_published = models.BooleanField(default=True, verbose_name='Публикация')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name='Категория', null=False)
     slug = models.SlugField(verbose_name='Ярлык для URL', null=False, default='', unique=True)
+    reviews = models.ManyToManyField('Review', verbose_name='Отзывы об игрушке', related_name='reviews', blank=True)
 
     def __str__(self):
         return self.title
     
+    def overall_rating(self):
+        sum_reviews_rating=sum([
+            review.rating
+            for review in Review.objects.filter(toy=self)
+        ])
+        overall = sum_reviews_rating / self.reviews.count()
+        return round(overall, 2)
+
     class Meta:
         verbose_name = 'Игрушка'
         verbose_name_plural = 'Игрушки'
@@ -49,12 +58,21 @@ class CartItem(models.Model):
     toy = models.ForeignKey(Toy, verbose_name='Игрушка', null=False, on_delete=models.CASCADE)
     amount = models.IntegerField(verbose_name='Количество', null=False, default=1)
 
+    def total(self):
+        return self.amount * self.toy.cost
+
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart', blank=True)
     user = models.OneToOneField('auth.User', verbose_name='Владелец корзины', null=False, on_delete=models.CASCADE)
-    
+
     def __str__(self) -> str:
         return f'Корзина пользователя {self.user.username}'
+    
+    def total_price(self):
+        return sum([
+            cart_item.total()
+            for cart_item in CartItem.objects.filter(cart=self)
+        ])
     
 
     class Meta:
@@ -77,3 +95,24 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = 'Транзакция'
         verbose_name_plural = 'Транзакции'
+    
+class Review(models.Model):
+    RATING_CHOICES=[
+        ('1', 1),
+        ('2', 2),
+        ('3', 3),
+        ('4', 4),
+        ('5', 5),
+    ]
+    toy = models.ForeignKey(Toy, verbose_name='Связь к игрушке', blank=False, on_delete=models.CASCADE)
+    title = models.CharField(max_length=70, verbose_name='Заголовок отзыва', null=False)
+    description = models.CharField(max_length=500, verbose_name='Текст отзыва', null=False)
+    user = models.ForeignKey('auth.User', verbose_name='Автор отзыва', null=False, on_delete=models.CASCADE)
+    rating = models.IntegerField(verbose_name='Рейтинг', choices=RATING_CHOICES, null=False, default='Five')
+
+    def __str__(self) -> str:
+        return f'Отзывы об игрушке {self.toy}'
+    
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.views import APIView
-from .models import Toy, Cart
+from .models import Toy, Cart, Review
 from .serializers import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -18,10 +18,21 @@ class ToyAPIList(generics.ListAPIView):
     serializer_class = ToySerializer
     pagination_class = ToyAPIListPagination
 
-class RetrieveToyAPI(generics.RetrieveAPIView):
-    lookup_field = 'slug'
-    queryset = Toy.objects.all()
-    serializer_class = ToySerializer
+class RetrieveToyAPI(APIView):
+    def get(self, request: HttpRequest, slug: str):
+        toy = Toy.objects.get(slug=slug)
+        serializer = ToySerializer(toy)
+        return Response(data=serializer.data)
+    
+    def put(self, request: HttpRequest, slug: str):
+        serializer = ReviewSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        review = serializer.save()
+        toy = Toy.objects.get(slug=slug)
+        toy.reviews.add(review)
+        toy.save()
+        return Response({'responce': 'Спасибо за отзыв!'})
+        
 
 class TransactionAPIView(APIView):
     def get(self, request: HttpRequest):
