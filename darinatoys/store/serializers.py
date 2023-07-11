@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Toy, Avatar, Cart, CartItem, Transaction, Review, Feedback
+from .models import Toy, Avatar, Cart, CartItem, Transaction, Review, Feedback, UserProfile
 
 class PhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
@@ -44,4 +44,11 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ('email', 'user', 'message', 'status')
+
+class userProfileSerializer(serializers.ModelSerializer):
+    user=serializers.StringRelatedField(read_only=True)
+    transactions = TransactionSerializer(many=True)
+    class Meta:
+        model=UserProfile
+        fields='__all__'
 

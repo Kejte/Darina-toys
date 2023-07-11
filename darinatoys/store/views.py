@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.views import APIView
-from .models import Toy, Cart, Review
+from .models import Toy, Cart, UserProfile
 from .serializers import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.request import HttpRequest
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerProfileOrReadOnly
 
 class ToyAPIListPagination(PageNumberPagination):
     page_size = 40
@@ -91,6 +92,19 @@ class ListToysByCategory(generics.ListAPIView):
     def get_queryset(self):
         return Toy.objects.filter(category__slug=self.kwargs['slug'])
 
+class UserProfileListCreateView(generics.ListCreateAPIView):
+    queryset=UserProfile.objects.all()
+    serializer_class=userProfileSerializer
+    permission_classes=[IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user=self.request.user
+        serializer.save(user=user)
+
+class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset=UserProfile.objects.all()
+    serializer_class=userProfileSerializer
+    permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
 
 
 

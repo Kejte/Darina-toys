@@ -1,6 +1,7 @@
 from django.db import models
 from darinatoys.settings import MEDIA_URL
 
+
 def upload_to_toys(instance, filename):
     return f"toys/{instance.toy.category.slug}/{instance.toy.slug}/{filename}"
 
@@ -134,3 +135,17 @@ class Feedback(models.Model):
     class Meta:
         verbose_name = 'Обращение'
         verbose_name_plural = 'Обращения'
+
+class UserProfile(models.Model):
+    user=models.OneToOneField('auth.User',on_delete=models.CASCADE,related_name="profile")
+    country=models.CharField(max_length=30,blank=True)
+    town=models.CharField(max_length=30,blank=True)
+    date_joined=models.DateTimeField(auto_now_add=True)
+    transactions=models.ManyToManyField(Transaction,verbose_name='Заказы', blank=True)
+
+    def __str__(self) -> str:
+        return self.user.username
+    
+    class Meta:
+        verbose_name = 'Профиль пользоывателя'
+        verbose_name_plural = 'Проифили пользователя'

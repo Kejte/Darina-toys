@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from store.views import *
 from .settings import MEDIA_ROOT, DEBUG
 from django.conf.urls.static import static
@@ -27,9 +27,10 @@ urlpatterns = [
     path('toy/<str:slug>/', RetrieveToyAPI.as_view()),
     path('category/<str:slug>/', ListToysByCategory.as_view()),
     path('cart/', CartAPIView.as_view()),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
+    path("all-profiles",UserProfileListCreateView.as_view(),name="all-profiles"),
+    path("profile/<int:pk>",userProfileDetailView.as_view(),name="profile"),
     path('cart/purchase/', TransactionAPIView.as_view()),
     path('feedback/', FeedbackAPI.as_view())
 ]
