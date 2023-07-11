@@ -35,8 +35,11 @@ class Toy(models.Model):
             review.rating
             for review in Review.objects.filter(toy=self)
         ])
-        overall = sum_reviews_rating / self.reviews.count()
-        return round(overall, 2)
+        if self.reviews.count() > 0:
+            overall = sum_reviews_rating / self.reviews.count()
+            return round(overall, 2)
+        else:
+            return 0 
 
     class Meta:
         verbose_name = 'Игрушка'
@@ -141,7 +144,7 @@ class UserProfile(models.Model):
     country=models.CharField(max_length=30,blank=True)
     town=models.CharField(max_length=30,blank=True)
     date_joined=models.DateTimeField(auto_now_add=True)
-    transactions=models.ManyToManyField(Transaction,verbose_name='Заказы', blank=True)
+   
 
     def __str__(self) -> str:
         return self.user.username

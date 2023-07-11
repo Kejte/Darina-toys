@@ -47,7 +47,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
 
 class userProfileSerializer(serializers.ModelSerializer):
     user=serializers.StringRelatedField(read_only=True)
-    transactions = TransactionSerializer(many=True)
+    #transactions = TransactionSerializer(many=True)
     class Meta:
         model=UserProfile
         fields='__all__'

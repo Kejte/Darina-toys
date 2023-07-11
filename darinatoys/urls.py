@@ -32,7 +32,9 @@ urlpatterns = [
     path("all-profiles",UserProfileListCreateView.as_view(),name="all-profiles"),
     path("profile/<int:pk>",userProfileDetailView.as_view(),name="profile"),
     path('cart/purchase/', TransactionAPIView.as_view()),
-    path('feedback/', FeedbackAPI.as_view())
+    path('feedback/', FeedbackAPI.as_view()),
+    path('', HomePage.as_view()),
+    path('about/', About.as_view())
 ]
 
 if DEBUG:

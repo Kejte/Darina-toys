@@ -20,6 +20,7 @@ class ToyAPIList(generics.ListAPIView):
     pagination_class = ToyAPIListPagination
 
 class FeedbackAPI(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self, request: HttpRequest):
         feedbacks = Feedback.objects.filter(user=request.user)
         serializer = FeedbackSerializer(feedbacks, many=True)
@@ -52,6 +53,8 @@ class RetrieveToyAPI(APIView):
         
 
 class TransactionAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def get(self, request: HttpRequest):
         transaction = Transaction.objects.filter(user=request.user)
         serializer = TransactionSerializer(transaction, many=True)
@@ -105,6 +108,14 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset=UserProfile.objects.all()
     serializer_class=userProfileSerializer
     permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
+
+class HomePage(APIView):
+    def get(self, request: HttpRequest):
+        return Response({'responce': 'Главная страница'})
+
+class About(APIView):
+    def get(self, request: HttpRequest):
+        return Response({'responce': 'О нас'})
 
 
 
