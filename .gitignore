@@ -1,6 +1,7 @@
 #module migrations
 /*/migrations/*
 !/*/migrations/__init__.py
+/.my_pgpass
 
 #cached files
 __pycache__
