@@ -112,7 +112,7 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
 class HomePage(APIView):
     def get(self, request: HttpRequest):
         photos = Avatar.objects.all()
-        serializer = PhotoSerializer(photos)
+        serializer = PhotoSerializer(photos, many=True)
         return Response(data=serializer.data)
 
 
