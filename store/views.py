@@ -109,6 +109,13 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=userProfileSerializer
     permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
 
+class HomePage(APIView):
+    def get(self, request: HttpRequest):
+        photos = Avatar.objects.all()
+        serializer = PhotoSerializer(photos)
+        return Response(data=serializer.data)
+
+
 
 
 
