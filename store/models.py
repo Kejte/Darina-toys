@@ -59,8 +59,8 @@ class Avatar(models.Model):
         verbose_name_plural = 'Аватары'
 
 class CartItem(models.Model):
-    toy = models.ForeignKey(Toy, verbose_name='Игрушка', null=False, on_delete=models.CASCADE)
-    amount = models.IntegerField(verbose_name='Количество', null=False, default=1)
+    toy = models.ForeignKey(Toy, verbose_name='Игрушка', related_name="toys", on_delete=models.CASCADE)
+    amount = models.IntegerField(verbose_name='Количество')
 
     def total(self):
         return self.amount * self.toy.cost

@@ -109,13 +109,6 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=userProfileSerializer
     permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
 
-class HomePage(APIView):
-    def get(self, request: HttpRequest):
-        return Response({'responce': 'Главная страница'})
-
-class About(APIView):
-    def get(self, request: HttpRequest):
-        return Response({'responce': 'О нас'})
 
 
 

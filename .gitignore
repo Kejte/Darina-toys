@@ -9,8 +9,10 @@ __pycache__
 #works files
 *.sqlite3
 .env
+.env.db
 
 #all static
 /static
 /media
 /venv
+/data

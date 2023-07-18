@@ -3,10 +3,13 @@ version: '3.5'
 services:
   django:
     build: .
-    container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    container_name: django_backend
+    restart: on-failure
+    env_file:
+      - ./.env
     volumes:
       - .:/usr/src/app
+      - static:/usr/src/app/static
     ports:
       - 8000:8000
     depends_on:
@@ -16,17 +19,15 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    container_name: pgdb
+      - POSTGRES_DB=darianatoys
     volumes:
-      - pgdbdata:/var/lib/postgresql/data/
-
-  adminer:
-    image: adminer
-    restart: always   #c 26 по 30 строку(вставлен новый фрагмент)
+      - ./data:/var/lib/postgresql/data
     ports:
-      - 8080:8080
+      - 5432:5432
+      
 volumes:
-  pgdbdata: null
+
+  static: 
+    name: static
