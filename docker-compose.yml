@@ -17,17 +17,20 @@ services:
 
   pgdb:
     image: postgres
+    container_name: pgdb
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
       
 volumes:
-
+  pgdata:
+    name: pgdata
+    
   static: 
     name: static

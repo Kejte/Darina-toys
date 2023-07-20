@@ -6,7 +6,7 @@ from .serializers import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.request import HttpRequest
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsOwnerProfileOrReadOnly
 
 class ToyAPIListPagination(PageNumberPagination):
@@ -18,6 +18,8 @@ class ToyAPIList(generics.ListAPIView):
     queryset = Toy.objects.all()
     serializer_class = ToySerializer
     pagination_class = ToyAPIListPagination
+    permission_classes = [AllowAny]
+    authentication_classes = []
 
 class FeedbackAPI(APIView):
     permission_classes=[IsAuthenticated]
@@ -91,6 +93,8 @@ class CartAPIView(APIView):
 class ListToysByCategory(generics.ListAPIView):
     serializer_class = ToySerializer
     pagination_class = ToyAPIListPagination
+    permission_classes = [AllowAny]
+    authentication_classes = []
 
     def get_queryset(self):
         return Toy.objects.filter(category__slug=self.kwargs['slug'])
@@ -110,6 +114,9 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
 
 class HomePage(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
     def get(self, request: HttpRequest):
         photos = Avatar.objects.all()
         serializer = PhotoSerializer(photos, many=True)
