@@ -16,3 +16,4 @@ __pycache__
 /media
 /venv
 /data
+/logs.log
