@@ -26,9 +26,9 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '172.27.0.3', '0.0.0.0', 'plush-toy.shop']
+ALLOWED_HOSTS = ['localhost', '172.27.0.3', '0.0.0.0', 'plush-toy.shop', '5.63.154.245']
 
 
 # Application definition
