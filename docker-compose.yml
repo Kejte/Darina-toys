@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/usr/src/app
       - static:/usr/src/app/static
-      - media:/user/src/app/media
+      - media:/usr/src/app/media
     ports:
       - 8000:8000
     depends_on:
@@ -33,6 +33,7 @@ services:
     build: ./nginx
     volumes:
       - static:/static
+      - media:/media
     ports: 
       - "80:80"
     depends_on:

@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from store.views import *
-from .settings import MEDIA_ROOT, DEBUG
+from .settings import MEDIA_ROOT, DEBUG, MEDIA_URL
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+import os
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,5 +37,4 @@ urlpatterns = [
     path('', HomePage.as_view())
 ]
 
-if DEBUG:
-    urlpatterns += static("media/", document_root=MEDIA_ROOT)
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

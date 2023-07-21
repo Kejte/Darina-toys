@@ -1,10 +1,9 @@
 from django.db import models
-from darinatoys.settings import MEDIA_URL
+from darinatoys.settings import MEDIA_URL, BASE_DIR
 
 
 def upload_to_toys(instance, filename):
     return f"toys/{instance.toy.category.slug}/{instance.toy.slug}/{filename}"
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Имя', null=False)
