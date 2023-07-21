@@ -10,6 +10,7 @@ services:
     volumes:
       - .:/usr/src/app
       - static:/usr/src/app/static
+      - media:/user/src/app/media
     ports:
       - 8000:8000
     depends_on:
@@ -43,3 +44,6 @@ volumes:
     
   static: 
     name: static
+  
+  media:
+    name: media

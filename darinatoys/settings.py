@@ -125,6 +125,7 @@ USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS=True
 
+CSRF_TRUSTED_ORIGINS=["http://plush-toy.shop"]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 

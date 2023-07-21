@@ -15,6 +15,6 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . .
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-RUN chmod +x start.sh
-ENTRYPOINT ["./start.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# RUN chmod +x start.sh
+# ENTRYPOINT ["./start.sh"]
