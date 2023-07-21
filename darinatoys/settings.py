@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '172.27.0.3', '0.0.0.0', 'plush-toy.shop', '5.63.154.245']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'plush-toy.shop', '5.63.154.245', 'django']
 
 
 # Application definition
@@ -130,8 +130,6 @@ CORS_ALLOW_ALL_ORIGINS=True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

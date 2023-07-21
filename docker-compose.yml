@@ -27,6 +27,15 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports: 
+      - "80:80"
+    depends_on:
+      - django
       
 volumes:
   pgdata:
