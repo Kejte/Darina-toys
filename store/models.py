@@ -67,16 +67,17 @@ class CartItem(models.Model):
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart', blank=True)
     user = models.OneToOneField('auth.User', verbose_name='Владелец корзины', null=False, on_delete=models.CASCADE)
+    total_price = models.IntegerField(verbose_name='Общая стоимость', default=0)
 
     def __str__(self) -> str:
         return f'Корзина пользователя {self.user.username}'
     
-    def total_price(self):
-        # return CartItem.objects.filter(cart=self, in_cart=True).annotate(Sum('total'))
-        return sum([
-            cart_item.total()
-            for cart_item in CartItem.objects.filter(cart=self)
-        ])
+    # def total_price(self):
+    #     # return CartItem.objects.filter(in_cart=True).annotate(Sum('total'))
+    #     return sum([
+    #         cart_item.total
+    #         for cart_item in CartItem.objects.filter(in_cart=True)
+    #     ])
 
     class Meta:
         verbose_name = 'Корзина'

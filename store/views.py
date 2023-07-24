@@ -69,6 +69,7 @@ class TransactionAPIView(APIView):
             new_transaction.items.add(item)
         cart.items.update(in_cart=False)
         cart.items.clear()
+        Cart.objects.filter(user=request.user).update(total_price=0)
         new_transaction.save()
         return Response({'responce': 'Ваш заказ отправлен на обработку'})  
 
@@ -92,11 +93,14 @@ class CartAPIView(APIView):
             new_total = total + (CartItem.objects.get(toy=toy,cart=cart,in_cart=True).amount * CartItem.objects.get(toy=toy,cart=cart,in_cart=True).toy.cost)
             new_amount = amount + request.data['amount']
             item = CartItem.objects.filter(toy=toy, cart=cart, in_cart=True).update(amount=new_amount, total=new_total)
-            print(CartItem.objects.get(toy=toy,cart=cart,in_cart=True).total)
+            cart_total_price = cart.total_price + total
+            Cart.objects.filter(user=request.user).update(total_price=cart_total_price)
             return Response({'responce': 'Вы добавили товар в корзину'})
         except Exception:
             item = CartItem.objects.create(toy=toy, amount=request.data['amount'], in_cart=True, total=total)
             cart.items.add(item)
+            cart_total_price = cart.total_price + total
+            new_total_price = Cart.objects.filter(user=request.user).update(total_price=cart_total_price)
             return Response({'responce': 'Вы добавили товар в корзину'})
         
 
