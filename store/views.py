@@ -42,14 +42,19 @@ class RetrieveToyAPI(APIView):
     
     def put(self, request: HttpRequest, slug: str):
         transactions = Transaction.objects.filter(user=request.user, status='RD')
+        toy = Toy.objects.get(slug=slug)
+        cart = Cart.objects.get(user=request.user)
         if len(transactions) > 0:
-            serializer = ReviewSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            review = serializer.save()
-            toy = Toy.objects.get(slug=slug)
-            toy.reviews.add(review)
-            toy.save()
-            return Response({'responce': 'Спасибо за отзыв!'})
+            try:
+                CartItem.objects.get(cart=cart, toy=toy, in_cart=False)
+                serializer = ReviewSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                review = serializer.save()
+                toy.reviews.add(review)
+                toy.save()
+                return Response({'responce': 'Спасибо за отзыв!'})
+            except Exception:
+                return Response({'responce': 'Произошла непредвиденная ошибка'})
         else:
             return Response({'responce': 'Вы не можете оставить отзыв так как не приобрели товар'})
         
@@ -108,7 +113,21 @@ class CartAPIView(APIView):
     
     def delete(self, request: HttpRequest):
         cart = Cart.objects.get(user=request.user)
-        
+        toy = Toy.objects.get(pk=request.data['toy'])
+        cart_item = CartItem.objects.get(cart=cart, in_cart=True, toy=toy)
+        amount_to_delete = request.data['amount']
+        if cart_item.amount > amount_to_delete:
+            new_amount = cart_item.amount - amount_to_delete
+            new_total = new_amount * toy.cost
+            new_total_price = cart.total_price - (cart_item.total - new_total)
+            CartItem.objects.filter(cart=cart, in_cart=True, toy=toy).update(amount=new_amount, total=new_total)
+            Cart.objects.filter(user=request.user).update(total_price=new_total_price)
+            return Response({'responce': f'Из корзины было удалено {amount_to_delete} {toy.title}'})
+        else:
+            new_total_price = cart.total_price - cart_item.total
+            cart_item.delete()
+            Cart.objects.filter(user=request.user).update(total_price=new_total_price)
+            return Response({'responce': f'Игрушка {toy.title} была удалена из корзины'})
 
 
 class ListToysByCategory(generics.ListAPIView):
@@ -123,7 +142,8 @@ class ListToysByCategory(generics.ListAPIView):
 class UserProfileListCreateView(generics.ListCreateAPIView):
     queryset=UserProfile.objects.all()
     serializer_class=userProfileSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[AllowAny]
+    authentication_classes = []
 
     def perform_create(self, serializer):
         user=self.request.user
@@ -134,14 +154,6 @@ class userProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=userProfileSerializer
     permission_classes=[IsOwnerProfileOrReadOnly,IsAuthenticated]
 
-class HomePage(APIView):
-    permission_classes = [AllowAny]
-    authentication_classes = []
-
-    def get(self, request: HttpRequest):
-        photos = Avatar.objects.all()
-        serializer = PhotoSerializer(photos, many=True)
-        return Response(data=serializer.data)
 
 
 
