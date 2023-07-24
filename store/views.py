@@ -67,6 +67,7 @@ class TransactionAPIView(APIView):
         new_transaction = Transaction.objects.create(user=request.user)
         for item in cart.items.all():
             new_transaction.items.add(item)
+        cart.items.update(in_cart=False)
         cart.items.clear()
         new_transaction.save()
         return Response({'responce': 'Ваш заказ отправлен на обработку'})  
@@ -81,13 +82,29 @@ class CartAPIView(APIView):
         return Response(data=serializer.data)
 
     def put(self, request: HttpRequest):
+        toy = Toy.objects.get(pk=request.data['toy'])
+        total = toy.cost * request.data['amount']
         serializer = CartItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        cart_item = serializer.save()
         cart = Cart.objects.get(user=request.user)
-        cart.items.add(cart_item)
-        cart.save()
-        return Response({'responce': 'Вы добавили игрушку в корзину'})
+        try:
+            amount = CartItem.objects.get(toy=toy,cart=cart,in_cart=True).amount
+            new_total = total + (CartItem.objects.get(toy=toy,cart=cart,in_cart=True).amount * CartItem.objects.get(toy=toy,cart=cart,in_cart=True).toy.cost)
+            new_amount = amount + request.data['amount']
+            item = CartItem.objects.filter(toy=toy, cart=cart, in_cart=True).update(amount=new_amount, total=new_total)
+            print(CartItem.objects.get(toy=toy,cart=cart,in_cart=True).total)
+            return Response({'responce': 'Вы добавили товар в корзину'})
+        except Exception:
+            item = CartItem.objects.create(toy=toy, amount=request.data['amount'], in_cart=True, total=total)
+            cart.items.add(item)
+            return Response({'responce': 'Вы добавили товар в корзину'})
+        
+
+        
+    
+    def delete(self, request: HttpRequest):
+        cart = Cart.objects.get(user=request.user)
+        
 
 
 class ListToysByCategory(generics.ListAPIView):

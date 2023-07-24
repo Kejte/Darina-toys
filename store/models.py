@@ -1,5 +1,6 @@
 from django.db import models
 from darinatoys.settings import MEDIA_URL, BASE_DIR
+from django.db.models import Sum
 
 
 def upload_to_toys(instance, filename):
@@ -60,9 +61,8 @@ class Avatar(models.Model):
 class CartItem(models.Model):
     toy = models.ForeignKey(Toy, verbose_name='Игрушка', related_name="toys", on_delete=models.CASCADE)
     amount = models.IntegerField(verbose_name='Количество')
-
-    def total(self):
-        return self.amount * self.toy.cost
+    in_cart = models.BooleanField(verbose_name='В корзине', default=True)
+    total = models.IntegerField(verbose_name='Общая стоимость', default=0)
 
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart', blank=True)
@@ -72,11 +72,11 @@ class Cart(models.Model):
         return f'Корзина пользователя {self.user.username}'
     
     def total_price(self):
+        # return CartItem.objects.filter(cart=self, in_cart=True).annotate(Sum('total'))
         return sum([
             cart_item.total()
             for cart_item in CartItem.objects.filter(cart=self)
         ])
-    
 
     class Meta:
         verbose_name = 'Корзина'

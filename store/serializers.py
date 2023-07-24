@@ -18,6 +18,7 @@ class ToySerializer(serializers.ModelSerializer):
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
+        depth = 1
         fields = ('amount', 'toy')
 
 class TransactionSerializer(serializers.ModelSerializer):
