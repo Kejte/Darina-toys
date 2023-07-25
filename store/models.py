@@ -63,6 +63,7 @@ class CartItem(models.Model):
     amount = models.IntegerField(verbose_name='Количество')
     in_cart = models.BooleanField(verbose_name='В корзине', default=True)
     total = models.IntegerField(verbose_name='Общая стоимость', default=0)
+    
 
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='cart', blank=True)
@@ -102,17 +103,17 @@ class Transaction(models.Model):
     
 class Review(models.Model):
     RATING_CHOICES=[
-        ('1', 1),
-        ('2', 2),
-        ('3', 3),
-        ('4', 4),
-        ('5', 5),
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
     ]
     toy = models.ForeignKey(Toy, verbose_name='Связь к игрушке', blank=False, on_delete=models.CASCADE)
     title = models.CharField(max_length=70, verbose_name='Заголовок отзыва', null=False)
     description = models.CharField(max_length=500, verbose_name='Текст отзыва', null=False)
     user = models.ForeignKey('auth.User', verbose_name='Автор отзыва', null=False, on_delete=models.CASCADE)
-    rating = models.IntegerField(verbose_name='Рейтинг', choices=RATING_CHOICES, null=False, default='Five')
+    rating = models.IntegerField(verbose_name='Рейтинг', choices=RATING_CHOICES, null=False, default='5')
 
     def __str__(self) -> str:
         return f'Отзывы об игрушке {self.toy}'

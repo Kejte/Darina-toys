@@ -41,20 +41,15 @@ class RetrieveToyAPI(APIView):
         return Response(data=serializer.data)
     
     def put(self, request: HttpRequest, slug: str):
-        transactions = Transaction.objects.filter(user=request.user, status='RD')
-        toy = Toy.objects.get(slug=slug)
-        cart = Cart.objects.get(user=request.user)
-        if len(transactions) > 0:
-            try:
-                CartItem.objects.get(cart=cart, toy=toy, in_cart=False)
-                serializer = ReviewSerializer(data=request.data)
-                serializer.is_valid(raise_exception=True)
-                review = serializer.save()
-                toy.reviews.add(review)
-                toy.save()
-                return Response({'responce': 'Спасибо за отзыв!'})
-            except Exception:
-                return Response({'responce': 'Произошла непредвиденная ошибка'})
+        transactions = Transaction.objects.filter(user=request.user, status='RD').count()
+        if int(transactions) > 0:
+            serializer = ReviewSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            review = serializer.save()
+            toy = Toy.objects.get(slug=slug)
+            toy.reviews.add(review)
+            toy.save()
+            return Response({'responce': 'Спасибо за отзыв!'})
         else:
             return Response({'responce': 'Вы не можете оставить отзыв так как не приобрели товар'})
         
@@ -72,7 +67,7 @@ class TransactionAPIView(APIView):
         new_transaction = Transaction.objects.create(user=request.user)
         for item in cart.items.all():
             new_transaction.items.add(item)
-        cart.items.update(in_cart=False)
+        cart.items.update(in_cart=False, in_transaction=True)
         cart.items.clear()
         Cart.objects.filter(user=request.user).update(total_price=0)
         new_transaction.save()
