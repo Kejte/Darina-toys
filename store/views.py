@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .permissions import IsOwnerProfileOrReadOnly
 
 class ToyAPIListPagination(PageNumberPagination):
-    page_size = 40
+    page_size = 20
     page_query_param = page_size
     max_page_size = 10000
 

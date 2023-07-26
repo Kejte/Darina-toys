@@ -3,6 +3,7 @@ from .models import Toy, Avatar, Cart, CartItem, Transaction, Review, Feedback, 
 
 class PhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
+    
     class Meta:
         model = Avatar
         fields = ['photo']
@@ -13,7 +14,7 @@ class ToySerializer(serializers.ModelSerializer):
     class Meta:
         model = Toy
         depth = 1
-        fields = ('title', 'description', 'overall_rating' , 'cost', 'photos', 'category', 'slug', 'reviews')
+        fields = "__all__"
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:

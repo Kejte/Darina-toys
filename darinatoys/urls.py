@@ -36,4 +36,4 @@ urlpatterns = [
     path('feedback/', FeedbackAPI.as_view()),
 ]
 
-urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT, name='media')
