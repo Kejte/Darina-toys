@@ -15,7 +15,7 @@ class ToyAPIListPagination(PageNumberPagination):
     max_page_size = 10000
 
 class ToyAPIList(generics.ListAPIView):
-    queryset = Toy.objects.all()
+    queryset = Toy.objects.filter(is_published=True)
     serializer_class = ToySerializer
     pagination_class = ToyAPIListPagination
     permission_classes = [AllowAny]

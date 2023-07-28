@@ -2,19 +2,27 @@ from rest_framework import serializers
 from .models import Toy, Avatar, Cart, CartItem, Transaction, Review, Feedback, UserProfile
 
 class PhotoSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField()
-    
+    image_url = serializers.SerializerMethodField('get_image_url')
+
+
     class Meta:
         model = Avatar
-        fields = ['photo']
+        fields = ['image_url']
+
+    def get_image_url(self, obj):
+        return 'http://plush-toy.shop' + str(obj.photo.url)
 
 class ToySerializer(serializers.ModelSerializer):
     photos = PhotoSerializer(many=True)
-    #overall_rating = Toy().overall_rating()
+    overall_rating = serializers.SerializerMethodField('get_overall_rating')
+    
     class Meta:
         model = Toy
         depth = 1
         fields = "__all__"
+
+    def get_overall_rating(self, obj):
+        return obj.overall_rating()
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
