@@ -25,10 +25,17 @@ class ToySerializer(serializers.ModelSerializer):
         return obj.overall_rating()
 
 class CartItemSerializer(serializers.ModelSerializer):
+    photos = serializers.SerializerMethodField('get_photos')
+
     class Meta:
         model = CartItem
         depth = 1
-        fields = ('amount', 'toy', 'total')
+        fields = ('amount', 'toy', 'photos', 'total')
+    
+    def get_photos(self, obj):
+        photos = Avatar.objects.get(toy=obj.toy)
+        serializer = PhotoSerializer(photos)
+        return serializer.data
 
 class TransactionSerializer(serializers.ModelSerializer):
 
