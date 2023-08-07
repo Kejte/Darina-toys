@@ -41,8 +41,8 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        depth = 1
-        fields = ('items','status')
+        depth = 2
+        fields = ('id', 'status', 'items', 'total_price')
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True)

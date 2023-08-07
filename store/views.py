@@ -64,10 +64,10 @@ class TransactionAPIView(APIView):
     
     def put(self, request: HttpRequest):
         cart = Cart.objects.get(user=request.user)
-        new_transaction = Transaction.objects.create(user=request.user)
+        new_transaction = Transaction.objects.create(user=request.user, total_price=cart.total_price)
         for item in cart.items.all():
             new_transaction.items.add(item)
-        cart.items.update(in_cart=False, in_transaction=True)
+        cart.items.update(in_cart=False)
         cart.items.clear()
         Cart.objects.filter(user=request.user).update(total_price=0)
         new_transaction.save()

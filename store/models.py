@@ -93,6 +93,7 @@ class Transaction(models.Model):
     items = models.ManyToManyField(CartItem, verbose_name='Игрушки', related_name='transaction')
     user = models.ForeignKey('auth.User', verbose_name='Владелец корзины',  null=False, on_delete=models.CASCADE)
     status = models.CharField(max_length=2, choices=TRANSACTION_CHOICES, verbose_name='Статус заказа', null=False, default='NW')
+    total_price = models.IntegerField(verbose_name='Общая стоимость', default=0)
 
     def __str__(self) -> str:
         return f'Транзакции пользователя {self.user.username}'
