@@ -23,17 +23,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 import os
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('toylist/', ToyAPIList.as_view()),
-    path('toy/<str:slug>/', RetrieveToyAPI.as_view()),
-    path('category/<str:slug>/', ListToysByCategory.as_view()),
-    path('cart/', CartAPIView.as_view()),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-    path("all-profiles",UserProfileListCreateView.as_view(),name="all-profiles"),
-    path("profile/<int:pk>",userProfileDetailView.as_view(),name="profile"),
-    path('cart/purchase/', TransactionAPIView.as_view()),
-    path('feedback/', FeedbackAPI.as_view()),
+    path('api/v1/admin/', admin.site.urls),
+    path('api/v1/toylist/', ToyAPIList.as_view()),
+    path('api/v1/toy/<str:slug>/', RetrieveToyAPI.as_view()),
+    path('api/v1/category/<str:slug>/', ListToysByCategory.as_view()),
+    path('api/v1/cart/', CartAPIView.as_view()),
+    path('api/v1/auth/', include('djoser.urls')),
+    path('api/v1/auth/', include('djoser.urls.jwt')),
+    path("api/v1/all-profiles",UserProfileListCreateView.as_view(),name="all-profiles"),
+    path("api/v1/profile/<int:pk>",userProfileDetailView.as_view(),name="profile"),
+    path('api/v1/cart/purchase/', TransactionAPIView.as_view()),
+    path('api/v1/feedback/', FeedbackAPI.as_view()),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT, name='media')
