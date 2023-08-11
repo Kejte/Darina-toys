@@ -8,7 +8,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - .:/usr/src/app
+      - site:/usr/src/app
       - static:/usr/src/app/static
       - media:/usr/src/app/media
     ports:
@@ -38,6 +38,16 @@ services:
       - "80:80"
     depends_on:
       - django
+  
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    container_name: certbot
+    volumes:
+      - etc-letsencrypt:/etc/letsencrypt
+      - site:/var/www/site
+    command: certonly --webroot --webroot-path=/var/www/site --email kejte1@mail.ru --agree-tos --no-eff-email -d plush-toy.shop
       
 volumes:
   pgdata:
@@ -48,3 +58,9 @@ volumes:
   
   media:
     name: media
+  
+  site:
+    name: site
+  
+  etc-letsencrypt:
+    name: letsencrypt
