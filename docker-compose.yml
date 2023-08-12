@@ -1,3 +1,4 @@
+
 version: '3.5'
 
 services:
@@ -34,20 +35,25 @@ services:
     volumes:
       - static:/static
       - media:/media
+      - etc-letsencrypt:/etc/letsencrypt
     ports: 
+      - "443:443"
       - "80:80"
     depends_on:
-      - django
+      certbot:
+        condition: service_completed_successfully
   
   certbot:
     image: certbot/certbot
-    depends_on:
-      - nginx
     container_name: certbot
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - etc-letsencrypt:/etc/letsencrypt
-      - site:/var/www/site
-    command: certonly --webroot --webroot-path=/var/www/site --email kejte1@mail.ru --agree-tos --no-eff-email -d plush-toy.shop
+    command: certonly --standalone --non-interactive
+                      --agree-tos --email l0nelyleob.working@gmail.com
+                      -d plush-toy.shop
       
 volumes:
   pgdata:

@@ -25,31 +25,28 @@ class ToySerializer(serializers.ModelSerializer):
         return obj.overall_rating()
 
 class CartItemSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField('get_photos')
+    photos = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        depth = 1
+        depth = 2
         fields = ('amount', 'toy', 'photos', 'total')
     
     def get_photos(self, obj):
-        photos = Avatar.objects.get(toy=obj.toy)
-        serializer = PhotoSerializer(photos)
+        photos = Avatar.objects.filter(toy=obj.toy)
+        serializer = PhotoSerializer(photos, many=True)
         return serializer.data
 
 class TransactionSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True)
 
     class Meta:
         model = Transaction
-        depth = 2
-        fields = ('id', 'status', 'items', 'total_price')
+        depth = 1
+        fields = ('id', 'status', 'items','total_price')
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True)
-    # total_price = serializers.SerializerMethodField()
-
-    # def get_total_price(self, obj):
-    #    return Cart().total_price()
 
     class Meta:
         model = Cart
